@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Каталог книг: просмотр, поиск и личный список с учётом статуса чтения.">
+  <title>Каталог книг</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="brand" href="#/">Каталог книг</a>
+    <nav class="nav">
+      <a class="nav__link" data-nav="/" href="#/">Каталог</a>
+      <a class="nav__link" data-nav="/my" data-auth hidden href="#/my">Мои книги</a>
+      <a class="nav__link" data-nav="/books/new" data-auth hidden href="#/books/new">Добавить</a>
+    </nav>
+    <div class="topbar__actions" id="auth-actions"></div>
+  </div>
+</header>
+
+<main class="container">
+
+  <section data-page="/" hidden>
+    <div class="page-head">
+      <h1 class="page-head__title">Каталог книг</h1>
+      <p class="page-head__subtitle" id="catalog-count">Загрузка…</p>
+    </div>
+
+    <form class="toolbar" id="catalog-toolbar">
+      <input class="input toolbar__search" id="q" type="search" placeholder="Название, автор или жанр" aria-label="Поиск">
+      <select class="select" id="genre" aria-label="Жанр">
+        <option value="all">Все жанры</option>
+      </select>
+      <select class="select" id="sort" aria-label="Сортировка">
+        <option value="id">Сначала новые</option>
+        <option value="title">По названию</option>
+        <option value="author">По автору</option>
+        <option value="year">По году</option>
+        <option value="rating">По рейтингу</option>
+      </select>
+    </form>
+
+    <div class="grid" id="catalog-grid"></div>
+    <div id="catalog-empty" hidden></div>
+    <nav class="pager" id="catalog-pager"></nav>
+  </section>
+
+  <section data-page="/book" hidden>
+    <a class="btn--link" href="#/">← В каталог</a>
+    <article class="book">
+      <div class="book__media" id="book-media"></div>
+      <div>
+        <h1 class="book__title" id="book-title"></h1>
+        <p class="book__author" id="book-author"></p>
+        <div class="book__tags" id="book-tags"></div>
+        <div class="book__facts" id="book-facts"></div>
+        <p class="book__description" id="book-desc"></p>
+        <div class="row" id="book-status-row" hidden>
+          <label class="field__label" for="book-status">Статус чтения</label>
+          <select class="select" id="book-status">
+            <option value="want_to_read">Хочу прочитать</option>
+            <option value="reading">Читаю</option>
+            <option value="finished">Прочитано</option>
+          </select>
+        </div>
+        <div class="book__actions">
+          <button class="btn btn--primary" id="book-toggle" type="button">Добавить в список</button>
+          <a class="btn btn--ghost" id="book-edit" href="#/books/new" hidden>Редактировать</a>
+          <button class="btn btn--danger" id="book-delete" type="button" hidden>Удалить</button>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section data-page="/form" hidden>
+    <a class="btn--link" href="#/">← В каталог</a>
+    <h1 class="page-head__title" id="form-title">Новая книга</h1>
+    <div class="panel">
+      <form class="form" id="book-form">
+        <div class="alert alert--error" id="form-error" hidden></div>
+        <div class="form-grid">
+          <div class="field form-grid__full">
+            <label class="field__label" for="f-title">Название</label>
+            <input class="input" id="f-title" maxlength="255" required>
+          </div>
+          <div class="field">
+            <label class="field__label" for="f-author">Автор</label>
+            <input class="input" id="f-author" maxlength="255" required>
+          </div>
+          <div class="field">
+            <label class="field__label" for="f-genre">Жанр</label>
+            <input class="input" id="f-genre" maxlength="64" list="genre-list" required>
+            <datalist id="genre-list"></datalist>
+          </div>
+          <div class="field">
+            <label class="field__label" for="f-year">Год издания</label>
+            <input class="input" id="f-year" type="number" min="0" max="2100">
+            <span class="field__hint">От 0 до 2100</span>
+          </div>
+          <div class="field">
+            <label class="field__label" for="f-pages">Страниц</label>
+            <input class="input" id="f-pages" type="number" min="0" max="100000">
+            <span class="field__hint">От 0 до 100000</span>
+          </div>
+          <div class="field">
+            <label class="field__label" for="f-rating">Рейтинг</label>
+            <input class="input" id="f-rating" type="number" min="0" max="5" step="0.1">
+            <span class="field__hint">От 0 до 5</span>
+          </div>
+          <div class="field form-grid__full">
+            <label class="field__label" for="f-desc">Описание</label>
+            <textarea class="textarea" id="f-desc" maxlength="5000"></textarea>
+          </div>
+        </div>
+        <div class="cover-drop" id="cover-box" hidden>
+          <span class="field__label">Обложка</span>
+          <img class="thumb" id="cover-img" alt="" hidden>
+          <input class="input" id="cover-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+          <button class="btn btn--sm btn--danger" id="cover-del" type="button" hidden>Убрать обложку</button>
+          <span class="field__hint">JPEG, PNG, WebP или GIF, до 5 МБ.</span>
+        </div>
+        <p class="field__hint" id="cover-hint" hidden>Книга создаётся первой, обложка загрузится следом за ней.</p>
+        <div class="form__actions">
+          <button class="btn btn--primary" id="form-submit" type="submit">Добавить в каталог</button>
+          <a class="btn btn--ghost" href="#/">Отмена</a>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section data-page="/my" hidden>
+    <div class="page-head">
+      <h1 class="page-head__title">Мои книги</h1>
+    </div>
+    <div class="stat-grid" id="my-stats"></div>
+    <div class="row" id="my-tabs"></div>
+    <div class="list" id="my-list"></div>
+    <nav class="pager" id="my-pager"></nav>
+  </section>
+
+  <section data-page="/login" hidden>
+    <div class="panel auth">
+      <h1 class="auth__title">Вход</h1>
+      <p class="auth__subtitle">Введите логин и пароль, чтобы продолжить.</p>
+      <form class="form" id="login-form">
+        <div class="alert alert--error" id="login-error" hidden></div>
+        <div class="field">
+          <label class="field__label" for="l-login">Логин</label>
+          <input class="input" id="l-login" autocomplete="username" placeholder="имя пользователя или e-mail" required>
+        </div>
+        <div class="field">
+          <label class="field__label" for="l-pass">Пароль</label>
+          <input class="input" id="l-pass" type="password" autocomplete="current-password" required>
+        </div>
+        <button class="btn btn--primary btn--block" type="submit">Войти</button>
+      </form>
+      <p class="auth__switch">Нет аккаунта? <a class="btn--link" href="#/register">Зарегистрируйтесь</a></p>
+    </div>
+  </section>
+
+  <section data-page="/register" hidden>
+    <div class="panel auth">
+      <h1 class="auth__title">Регистрация</h1>
+      <p class="auth__subtitle">Создайте аккаунт, чтобы вести свой список чтения.</p>
+      <form class="form" id="register-form">
+        <div class="alert alert--error" id="register-error" hidden></div>
+        <div class="field">
+          <label class="field__label" for="r-user">Имя пользователя</label>
+          <input class="input" id="r-user" minlength="3" autocomplete="username" placeholder="ivan" required>
+          <span class="field__hint">От 3 до 32 символов: буквы, цифры и подчёркивание.</span>
+        </div>
+        <div class="field">
+          <label class="field__label" for="r-mail">E-mail</label>
+          <input class="input" id="r-mail" type="email" autocomplete="email" placeholder="ivan@example.com" required>
+        </div>
+        <div class="field">
+          <label class="field__label" for="r-pass">Пароль</label>
+          <input class="input" id="r-pass" type="password" minlength="8" autocomplete="new-password" required>
+          <span class="field__hint">Минимум 8 символов.</span>
+        </div>
+        <button class="btn btn--primary btn--block" type="submit">Создать аккаунт</button>
+      </form>
+      <p class="auth__switch">Уже зарегистрированы? <a class="btn--link" href="#/login">Войдите</a></p>
+    </div>
+  </section>
+
+</main>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+  addEventListener('error', function (e) {
+    var main = document.querySelector('main');
+    var shown = Array.prototype.some.call(
+      document.querySelectorAll('[data-page]'),
+      function (s) { return !s.hidden; }
+    );
+    if (main.dataset.reported || shown) return;
+    main.dataset.reported = '1';
+    var box = document.createElement('div');
+    box.className = 'panel';
+    box.textContent = 'Приложение не запустилось: ' + (e.message || 'ошибка загрузки скрипта') +
+      '. Обновите страницу с очисткой кеша: Ctrl+Shift+R.';
+    main.prepend(box);
+  });
+</script>
+
+<script type="module" src="/static/js/app.js"></script>
+</body>
+</html>

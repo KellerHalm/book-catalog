@@ -59,7 +59,7 @@
         <div class="book__tags" id="book-tags"></div>
         <div class="book__facts" id="book-facts"></div>
         <p class="book__description" id="book-desc"></p>
-        <div class="row" id="book-status-row" hidden>
+        <div class="row book__status" id="book-status-row" hidden>
           <label class="field__label" for="book-status">Статус чтения</label>
           <select class="select" id="book-status">
             <option value="want_to_read">Хочу прочитать</option>
@@ -78,7 +78,7 @@
 
   <section data-page="/form" hidden>
     <a class="btn--link" href="#/">← В каталог</a>
-    <h1 class="page-head__title" id="form-title">Новая книга</h1>
+    <h1 class="page-head__title form__title" id="form-title">Новая книга</h1>
     <div class="panel">
       <form class="form" id="book-form">
         <div class="alert alert--error" id="form-error" hidden></div>
@@ -98,17 +98,17 @@
           </div>
           <div class="field">
             <label class="field__label" for="f-year">Год издания</label>
-            <input class="input" id="f-year" type="number" min="0" max="2100">
+            <input class="input number-input" id="f-year" type="number" min="0" max="2100">
             <span class="field__hint">От 0 до 2100</span>
           </div>
           <div class="field">
             <label class="field__label" for="f-pages">Страниц</label>
-            <input class="input" id="f-pages" type="number" min="0" max="100000">
+            <input class="input number-input" id="f-pages" type="number" min="0" max="100000">
             <span class="field__hint">От 0 до 100000</span>
           </div>
           <div class="field">
             <label class="field__label" for="f-rating">Рейтинг</label>
-            <input class="input" id="f-rating" type="number" min="0" max="5" step="0.1">
+            <input class="input number-input" id="f-rating" type="number" min="0" max="5" step="0.1">
             <span class="field__hint">От 0 до 5</span>
           </div>
           <div class="field form-grid__full">
@@ -119,7 +119,7 @@
         <div class="cover-drop" id="cover-box" hidden>
           <span class="field__label">Обложка</span>
           <img class="thumb" id="cover-img" alt="" hidden>
-          <input class="input" id="cover-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+          <input class="input file-input" id="cover-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
           <button class="btn btn--sm btn--danger" id="cover-del" type="button" hidden>Убрать обложку</button>
           <span class="field__hint">JPEG, PNG, WebP или GIF, до 5 МБ.</span>
         </div>
@@ -137,7 +137,7 @@
       <h1 class="page-head__title">Мои книги</h1>
     </div>
     <div class="stat-grid" id="my-stats"></div>
-    <div class="row" id="my-tabs"></div>
+    <div class="row tabs" id="my-tabs"></div>
     <div class="list" id="my-list"></div>
     <nav class="pager" id="my-pager"></nav>
   </section>

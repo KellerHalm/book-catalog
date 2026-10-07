@@ -151,6 +151,31 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 .textarea { min-height: 130px; resize: vertical; }
 
+.number-input {
+  -moz-appearance: textfield;
+  cursor: text;
+}
+.number-input::-webkit-outer-spin-button,
+.number-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+.file-input { padding: 5px; cursor: pointer; }
+.file-input::file-selector-button {
+  padding: 6px 14px;
+  margin-right: 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--alt);
+  color: var(--muted);
+  font-weight: 560;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+.file-input::file-selector-button:hover { background: var(--surface); border-color: var(--muted); color: var(--text); }
+
 .select {
   appearance: none;
   padding-right: 34px;
@@ -166,6 +191,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .field__hint { font-size: 12.5px; color: var(--muted); }
 
 .form { display: flex; flex-direction: column; gap: 16px; }
+.form__title { margin-bottom: 18px; }
 .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .form-grid__full { grid-column: 1 / -1; }
 .form__actions { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -206,6 +232,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 .row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .row--between { justify-content: space-between; }
+
+.tabs { margin-bottom: 18px; }
 
 /* карточка книги */
 
@@ -304,6 +332,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .book__description { white-space: pre-wrap; line-height: 1.7; margin-bottom: 22px; }
 .book__description--empty { color: var(--muted); font-style: italic; }
 .book__actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.book__status { margin-bottom: 18px; }
 
 /* обложка в форме */
 
